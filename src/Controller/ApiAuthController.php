@@ -15,6 +15,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Security as SecurityOA;
 
 #[Route('/api/v1')]
 class ApiAuthController extends AbstractController
@@ -30,18 +32,101 @@ class ApiAuthController extends AbstractController
         $this->passwordHasher = $passwordHasher;
     }
 
-
+    /**
+     * @OA\Get(
+     *     path="api/v1/users/current",
+     *     description="Get current user",
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns token user",
+     *     @OA\JsonContent(
+     *        @OA\Property(
+     *          property="token",
+     *          type="string",
+     *        ),
+     *     )
+     * )
+     * @OA\Response(
+     *     response=400,
+     *     description="Incorrect login and password pair",
+     *     @OA\JsonContent(
+     *        @OA\Property(
+     *          property="Error message",
+     *          type="string"
+     *        ),
+     *     )
+     * )
+     * @OA\Response(
+     *     response="default",
+     *     description="Unxepected error",
+     *     @OA\JsonContent(
+     *        @OA\Property(
+     *          property="code",
+     *          type="string"
+     *        ),
+     *        @OA\Property(
+     *          property="message",
+     *          type="string"
+     *        ),
+     *     )
+     * )
+     */
     #[Route('/auth', name: 'api_login', methods: ['POST'])]
     public function login(): Response
     {
         //auth
     }
-
+    /**
+     * @OA\Get(
+     *     path="api/v1/users/current",
+     *     description="Get current user",
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns token user",
+     *     @OA\JsonContent(
+     *        @OA\Property(
+     *          property="token",
+     *          type="string",
+     *        ),
+     *        @OA\Property(
+     *          property="roles",
+     *          type="array",
+     *          @OA\Items(type="string")
+     *        ),
+     *     )
+     * )
+     * @OA\Response(
+     *     response=400,
+     *     description="",
+     *     @OA\JsonContent(
+     *        @OA\Property(
+     *          property="Error message",
+     *          type="string"
+     *        ),
+     *     )
+     * )
+     * @OA\Response(
+     *     response="default",
+     *     description="Unxepected error",
+     *     @OA\JsonContent(
+     *        @OA\Property(
+     *          property="code",
+     *          type="string"
+     *        ),
+     *        @OA\Property(
+     *          property="message",
+     *          type="string"
+     *        ),
+     *     )
+     * )
+     * @SecurityOA(name="Bearer")
+     */
     #[Route('/register', name: 'api_register', methods: ['POST'])]
     public function register(
         Request $request,
         UserRepository $userRepository,
-        UserDto $dto,
         EntityManagerInterface $entityManager,
         JWTTokenManagerInterface $JWTTokenManager
     ): Response

@@ -21,11 +21,13 @@ class UserFixtures extends Fixture
         $user = new User();
         $user->setEmail('ArtemSukhorukikh@yandex.ru');
         $user->setPassword($this->passwordHasher->hashPassword($user,'123qwe'));
+        $user->setBalance(1122.4);
         $manager->persist($user);
         $userAdmin = new User();
         $userAdmin->setEmail('Admin@mail.ru');
         $userAdmin->setPassword($this->passwordHasher->hashPassword($user,'123qwe'));
         $userAdmin->setRoles(['ROLE_SUPER_ADMIN']);
+        $userAdmin->setBalance(5565.8);
         $manager->persist($userAdmin);
         $manager->flush();
     }
