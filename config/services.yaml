@@ -19,7 +19,11 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    Gesdinet\JWTRefreshTokenBundle\Service\RefreshToken:
+        alias: "gesdinet.jwtrefreshtoken"
 
+    Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface:
+        alias: "gesdinet.jwtrefreshtoken.refresh_token_manager"
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventsSubscriber\ApiExceptions:

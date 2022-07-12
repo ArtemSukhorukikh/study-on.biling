@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use App\Dto\UserAuthDto;
 use App\Dto\UserDto;
+use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
+use Symfony\Component\Security;
+use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Gesdinet\JWTRefreshTokenBundle\Service\RefreshToken;
 use JMS\Serializer\SerializerBuilder;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -128,7 +132,9 @@ class ApiAuthController extends AbstractController
         Request $request,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
-        JWTTokenManagerInterface $JWTTokenManager
+        JWTTokenManagerInterface $JWTTokenManager,
+        RefreshTokenGeneratorInterface $refreshTokenGenerator,
+        RefreshTokenManagerInterface $refreshTokenManager,
     ): Response
     {
         $userDto = $this->serializer->deserialize($request->getContent(), UserDto::class, 'json');
@@ -155,9 +161,17 @@ class ApiAuthController extends AbstractController
         $user = \App\Entity\User::fromDto($userDto, $this->passwordHasher);
         $entityManager->persist($user);
         $entityManager->flush();
+        $refreshToken = $refreshTokenGenerator->createForUserWithTtl($user, (new \DateTime())->modify('+1 month')->getTimestamp());
+        $refreshTokenManager->save($refreshToken);
         $userAuth = new UserAuthDto();
         $userAuth->roles =  $user->getRoles();
         $userAuth->token = $JWTTokenManager->create($user);
+        $userAuth->refresh_token = $refreshToken->getRefreshToken();
         return $this->json($userAuth, Response::HTTP_CREATED);
+    }
+    #[Route('/token/refresh', name: 'api_refresh_token', methods: ['POST'])]
+    public function refresh(Request $request, RefreshToken $refreshService)
+    {
+        return $refreshService->refresh($request);
     }
 }
