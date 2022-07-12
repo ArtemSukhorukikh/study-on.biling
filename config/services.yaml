@@ -25,3 +25,5 @@ services:
     App\EventsSubscriber\ApiExceptions:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+    api:
+        class: App\Service\PaymentService

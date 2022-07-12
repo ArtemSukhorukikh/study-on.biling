@@ -49,7 +49,7 @@ class UserApiTest extends AbstractTest
             'POST',
             '/api/v1/register',
             server: ['CONTENT_TYPE' => 'application/json'],
-            content: $this->serializer->serialize(['username' => 'uswer2335@mail.com','password' => '123qwe'], 'json')
+            content: $this->serializer->serialize(['username' => 'uswer244658@mail.com','password' => '123qwe'], 'json')
         );
 
         self::assertTrue($client->getResponse()->headers->contains(
