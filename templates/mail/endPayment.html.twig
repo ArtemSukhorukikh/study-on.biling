@@ -1,0 +1,18 @@
+{% extends 'mail/base.html.twig' %}
+
+{% block title %}Уведомление об окончании аренды курсов{% endblock %}
+
+{% block body %}
+    Уважаемый клиент! У вас есть курсы, срок аренды которых подходит к концу:
+    {% for data in dataForMail %}
+        <tr>
+            <td style='font: 18px/24px arial; color: #1a1a1a;'>
+                <p>Курс {{ data['title']}} действует до
+                    {{ data['expires_at'] }}</p>
+            </td>
+            <td style='font: 18px/24px arial; color: #1a1a1a;'>
+                <p></p>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

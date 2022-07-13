@@ -39,6 +39,43 @@ class TransactionRepository extends ServiceEntityRepository
         }
     }
 
+    public function findEndingForMail($userId): array
+    {
+        $connect = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT c.title, t.expires_at FROM transaction t
+            INNER JOIN course c ON c.id = t.course_id
+            WHERE t.type = 0 
+            AND t.to_user_id = :user_id 
+            AND t.expires_at::date = (now()::date + '1 day'::interval)
+            OR t.expires_at::date > (now()::date)
+            ORDER BY t.created_at DESC
+            ";
+        $query = $connect->prepare($sql);
+        $query = $query->executeQuery([
+            'user_id' => $userId,
+        ]);
+        return $query->fetchAllAssociative();
+    }
+
+    public function forReportForMail(): array
+    {
+        $connect = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT c.title, c.type, count(t.id), sum(t.value)
+            FROM transaction t
+            JOIN course c on t.course_id = c.id
+            WHERE t.created_at::date between (now()::date - '1 month'::interval) AND now()::date
+            AND t.type = 0
+            GROUP BY c.title, c.type
+            ";
+        $query = $connect->prepare($sql);
+        $query = $query->executeQuery();
+        return $query->fetchAllAssociative();
+    }
+
 //    /**
 //     * @return Transaction[] Returns an array of Transaction objects
 //     */
