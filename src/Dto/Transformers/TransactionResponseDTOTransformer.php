@@ -14,6 +14,7 @@ class TransactionResponseDTOTransformer extends AbstractResponceDTOTransformer
         $dto->id = $object->getId();
         $dto->created_at = $object->getCreatedAt()->format('Y-m-d T H:i:s');
         $dto->type = $object->getType() === 0 ? 'payment' : 'deposit';
+        $dto->value = $object->getValue();
         if ($dto->type === 'payment') {
             $dto->code = $object->getCourse()->getCode();
         }
