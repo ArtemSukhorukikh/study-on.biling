@@ -129,7 +129,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user = new self();
         $user->setEmail($userDto->username);
         $user->setPassword($passwordHasher->hashPassword($user,$userDto->password));
-        $user->setBalance(0.0);
         return $user;
     }
 

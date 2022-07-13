@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Dto\UserAuthDto;
 use App\Dto\UserDto;
+use App\Service\PaymentService;
 use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
 use Symfony\Component\Security;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
@@ -135,6 +136,7 @@ class ApiAuthController extends AbstractController
         JWTTokenManagerInterface $JWTTokenManager,
         RefreshTokenGeneratorInterface $refreshTokenGenerator,
         RefreshTokenManagerInterface $refreshTokenManager,
+        PaymentService $paymentService,
     ): Response
     {
         $userDto = $this->serializer->deserialize($request->getContent(), UserDto::class, 'json');
@@ -159,6 +161,7 @@ class ApiAuthController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
         $user = \App\Entity\User::fromDto($userDto, $this->passwordHasher);
+        $paymentService->deposit($user, $_ENV['DEPOSIT_START'], $entityManager);
         $entityManager->persist($user);
         $entityManager->flush();
         $refreshToken = $refreshTokenGenerator->createForUserWithTtl($user, (new \DateTime())->modify('+1 month')->getTimestamp());

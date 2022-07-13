@@ -33,15 +33,15 @@ class PaymentService
         $entityManager->getConnection()->beginTransaction();
         try {
             if ($course->getPrice() === null) {
-                $transaction = new Transaction();
-                $transaction->setCreatedAt(new \DateTime());
-                $transaction->setCourse($course);
-                $transaction->setToUser($user);
-                $transaction->setType(0);
-                $transaction->setValue(0);
-                $entityManager->persist($transaction);
-                $entityManager->flush();
-                $entityManager->getConnection()->commit();
+//                $transaction = new Transaction();
+//                $transaction->setCreatedAt(new \DateTime());
+//                $transaction->setCourse($course);
+//                $transaction->setToUser($user);
+//                $transaction->setType(0);
+//                $transaction->setValue(0);
+//                $entityManager->persist($transaction);
+//                $entityManager->flush();
+//                $entityManager->getConnection()->commit();
                 return true;
             }
 
