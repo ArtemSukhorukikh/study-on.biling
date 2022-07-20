@@ -49,7 +49,6 @@ class TransactionRepository extends ServiceEntityRepository
             WHERE t.type = 0 
             AND t.to_user_id = :user_id 
             AND t.expires_at::date = (now()::date + '1 day'::interval)
-            OR t.expires_at::date > (now()::date)
             ORDER BY t.created_at DESC
             ";
         $query = $connect->prepare($sql);
