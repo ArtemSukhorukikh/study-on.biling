@@ -49,7 +49,7 @@ class UserApiTest extends AbstractTest
             'POST',
             '/api/v1/register',
             server: ['CONTENT_TYPE' => 'application/json'],
-            content: $this->serializer->serialize(['username' => 'uswer244658@mail.com','password' => '123qwe'], 'json')
+            content: $this->serializer->serialize(['username' => 'usetTest@mail.com','password' => '123qwe'], 'json')
         );
 
         self::assertTrue($client->getResponse()->headers->contains(
@@ -57,6 +57,7 @@ class UserApiTest extends AbstractTest
             'application/json'
         ));
         $json = json_decode($client->getResponse()->getContent(), true);
+        var_dump($json);
         self::assertNotEmpty($json['token']);
     }
 
@@ -67,7 +68,7 @@ class UserApiTest extends AbstractTest
             'POST',
             '/api/v1/auth',
             server: ['CONTENT_TYPE' => 'application/json'],
-            content: $this->serializer->serialize(['username' => 'user2335@mail.com','password' => '123qwe'], 'json')
+            content: $this->serializer->serialize(['username' => 'Admin@mail.ru','password' => '123qwe'], 'json')
         );
 
         self::assertTrue($client->getResponse()->headers->contains(
@@ -80,7 +81,7 @@ class UserApiTest extends AbstractTest
 
     public function testCurrentUser(): void
     {
-        $user = ['username' => 'user2335@mail.com','password' => '123qwe'];
+        $user = ['username' => 'Admin@mail.ru','password' => '123qwe'];
         $client = AbstractTest::getClient();
         $crawler = $client->request(
             'POST',

@@ -19,8 +19,9 @@ class AppFixtures extends Fixture
         $course->setCode('uid2');
         $course->setTitle('Java-разработчик');
         $course->setType(1);
-        $course->setPrice(15.0);
+        $course->setPrice(25.0);
         $manager->persist($course);
+        $course = new Course();
         $course->setCode('uid3');
         $course->setTitle('1С-разработчик');
         $course->setType(2);
